@@ -16,13 +16,13 @@ if (isset($_POST['submit'])) {
             return $pdo;
         }
         try {
-            $pdo = connect_db("localhost", "root", "Echarcon91!", "80", "php_day_09");
+            $pdo = connect_db("localhost", "root", "Echarcon91!", "80", "pool_php_rush");
 
         } catch (Exception $e) {
             echo $e->getMessage();
         }
 
-        $result = $pdo->query('SELECT id,name, email, password FROM users WHERE email = "' . $_POST['email'] . '"');
+        $result = $pdo->query('SELECT id, username, email, password FROM users WHERE email = "' . $_POST['email'] . '"');
         $hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $count = $result->rowcount();
         if ($count > 0) {
@@ -30,15 +30,15 @@ if (isset($_POST['submit'])) {
             $access = password_verify($_POST['password'], $data[0][0]->password);
             if ($access == TRUE) {
                 $_SESSION['access'] = TRUE;
-                $_SESSION['name'] = $data[0][0]->name;
+                $_SESSION['username'] = $data[0][0]->username;
                 $_SESSION['email'] = $data[0][0]->email;
                 $_SESSION['id'] = $data[0][0]->id;
                 if ($_POST['remember']) {
-                    setcookie("id", $data[0][0]->id, time() + 365*24*3600, "/pool_php_d10/ex_05/");
-                    setcookie("name", $data[0][0]->name, time() + 365*24*3600, "/pool_php_d10/ex_05/");
-                    setcookie("email", $data[0][0]->email, time() + 365*24*3600, "/pool_php_d10/ex_05/");
+                    setcookie("id", $data[0][0]->id, time() + 365*24*3600, "/My-coding-marketplace/");
+                    setcookie("username", $data[0][0]->username, time() + 365*24*3600, "/My-coding-marketplace/");
+                    setcookie("email", $data[0][0]->email, time() + 365*24*3600, "/My-coding-marketplace/");
                 }
-                header('Location: /pool_php_d10/ex_05/index.php');
+                header('Location: /My-coding-marketplace/index.php');
                 exit();
             } else {
                 echo "Incorrect password\n";

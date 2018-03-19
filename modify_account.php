@@ -2,28 +2,28 @@
 
 session_start();
 
-if ((isset($_COOKIE["name"])) || ($_SESSION['access'] == TRUE) ) {
+if ((isset($_COOKIE["username"])) || ($_SESSION['access'] == TRUE) ) {
     function connect_db($host, $username, $passwd, $port, $db) {
         $pdo = new PDO("mysql:host=" . $host . ";port=" . $port . ";dbname=" . $db, $username, $passwd);
         return $pdo;
     }
     try {
-        $pdo = connect_db("localhost", "root", "Echarcon91!", "80", "php_day_09");
+        $pdo = connect_db("localhost", "root", "Echarcon91!", "80", "pool_php_rush");
 
     } catch (Exception $e) {
         echo $e->getMessage();
     }
     if ($_SESSION['access'] == TRUE) {
-        $result = $pdo->query('SELECT name, email FROM users WHERE email = "' . $_SESSION['email'] . '"');
+        $result = $pdo->query('SELECT username, email FROM users WHERE email = "' . $_SESSION['email'] . '"');
     } else {
         if (isset($_COOKIE['name'])) {
-            $result = $pdo->query('SELECT name, email FROM users WHERE email = "' . $_COOKIE['email'] . '"');
+            $result = $pdo->query('SELECT username, email FROM users WHERE email = "' . $_COOKIE['email'] . '"');
         }
     }
     $data[] = $result->fetchAll(PDO::FETCH_OBJ);
 
 if (isset($_POST['submit'])) {
-    if (($_POST['name'] == "name") || (!isset($_POST['name']))) {
+    if (($_POST['username'] == "username") || (!isset($_POST['username']))) {
         echo "Invalid name\n";
     }
 
@@ -41,10 +41,10 @@ if (isset($_POST['submit'])) {
         $date = date("Y-m-d");
 
         if ($_SESSION['access'] == TRUE) {
-            $pdo->query('UPDATE users SET name = "' . $_POST['name'] . '", email = "' . $_POST['email'] .'", password = "' . $hash . '"  WHERE id =' . $_SESSION['id']);
+            $pdo->query('UPDATE users SET username = "' . $_POST['username'] . '", email = "' . $_POST['email'] .'", password = "' . $hash . '"  WHERE id =' . $_SESSION['id']);
         } else {
             if (isset($_COOKIE['name'])) {
-                $pdo->query('UPDATE users SET name = "' . $_POST['name'] . '", email = "' . $_POST['email'] .'", password = "' . $hash . '"  WHERE id =' . $_COOKIE['id']);
+                $pdo->query('UPDATE users SET username = "' . $_POST['username'] . '", email = "' . $_POST['email'] .'", password = "' . $hash . '"  WHERE id =' . $_COOKIE['id']);
 
             }
         }
@@ -66,7 +66,7 @@ if (isset($_POST['submit'])) {
 <body>
 <form action="modify_account.php" method="post">
     <p>
-        <label>Name :</label><input type="text" name="name" value="<?php echo $data[0][0]->name ?>" minlength="3" maxlength="10" required> <br>
+        <label>Name :</label><input type="text" name="username" value="<?php echo $data[0][0]->username ?>" minlength="3" maxlength="10" required> <br>
         <label>Mail :</label><input type="text" name="email" value="<?php echo $data[0][0]->email ?>" required> <br>
         <label>Password :</label><input type="password" name="password" minlength="3" maxlength="10" required> <br>
         <label>Password confirmation :</label><input type="password" name="password_confirmation" required> <br>
@@ -80,7 +80,7 @@ if (isset($_POST['submit'])) {
 <?php }
 
 else {
-    header('Location: /pool_php_d10/ex_05/login.php');
+    header('Location: /My-coding-marketplace/login.php');
     exit();
 }
 ?>
